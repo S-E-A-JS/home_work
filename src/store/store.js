@@ -1,21 +1,20 @@
-/* eslint-disable */
+import { configureStore, combineReducers } from "@reduxjs/toolkit"
 
-import { legacy_createStore as createStore } from "redux"
-import { taskReducer } from "./taskReducer"
+import { logger } from "./middleware/logger"
+import taskReducer from "./task"
+import errorReducer from "./errors"
 
-const initialState = [
-  {
-    id: 1,
-    title: "task 1",
-    completed: false,
-  },
-  {
-    id: 2,
-    title: "task 2",
-    completed: false,
-  },
-]
+const rootReducer = combineReducers ( {
+  errors: errorReducer,
+  tasks: taskReducer,
+} )
 
-export function initiateStore(){
-  return createStore ( taskReducer, initialState )}
+function createStore () {
+  return configureStore ( {
+    reducer: rootReducer,
+    middleware: getDefaultMiddleware => getDefaultMiddleware ().concat ( logger ),
+    devTools: process.env.NODE_ENV !== "production",
+  } )
+}
 
+export default createStore
