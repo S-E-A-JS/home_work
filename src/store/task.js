@@ -14,12 +14,10 @@ const taskSlice = createSlice ( {
   initialState,
   reducers: {
     add ( state, action ) {
-      state.entities.push ( action.payload )
-      const elementIndex = state.entities.findIndex ( el => el.id === action.payload.id )
-      state.entities[elementIndex] = {
-        ...state.entities[elementIndex],
+      state.entities.push ( {
+        ...action.payload,
         id: nanoid (),
-      }
+      } )
       state.isLoading = false
     },
     received ( state, action ) {
